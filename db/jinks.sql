@@ -17,6 +17,11 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP DATABASE IF EXISTS jinks;
+CREATE DATABASE jinks DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_general_ci;
+
+USE jinks;
+
 -- ----------------------------
 -- Table structure for t_admin
 -- ----------------------------

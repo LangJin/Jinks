@@ -1,6 +1,8 @@
 # -*- coding:utf-8 -*-
 __author__ = 'snake'
 
+from flask import jsonify
+
 
 def get_json(code=200, msg="操作成功!", data={}):
     """
@@ -11,4 +13,4 @@ def get_json(code=200, msg="操作成功!", data={}):
             data={}
         return: {}
     """
-    return {"code": code, "msg": msg, "data": data}
+    return jsonify({"code": code, "msg": msg, "data": data})

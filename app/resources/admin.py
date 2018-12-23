@@ -3,12 +3,12 @@ __author__ = "snake"
 
 from app import bp
 from functools import wraps
-from flask import jsonify as json, request, session
+from flask import request, session
 from app.utils.database import query, excute
 from app.utils.token import create_token
 from app.utils.json import get_json
 
-import math, traceback
+import traceback
 
 
 def _admin_permission_required(func):
@@ -26,8 +26,8 @@ def _admin_permission_required(func):
                 return func(*args, **kwargs)
             except:
                 print(traceback.print_exc())
-                return json(get_json(code=500, msg="内部错误,请检查参数是否正确!"))
-        return json(get_json(code=-300, msg="权限错误,请先登录!"))
+                return get_json(code=500, msg="内部错误,请检查参数是否正确!")
+        return get_json(code=-300, msg="权限错误,请先登录!")
 
     return wrapper
 
@@ -86,23 +86,13 @@ def adminlogin():
             result[0]["token"] = token
             _set_admin_session(result[0])
             excute("UPDATE `tbl_admin` SET `token`='%s' WHERE (`id`='%d') LIMIT 1" % (token, result[0].get("id")))
-            response = {}
-            response["code"] = 200
-            response["data"] = {"token": token}
-            response["msg"] = "登陆成功！"
-            return json(response)
+
+            return get_json(code=200, data={"token": token}, msg="登陆成功!")
         else:
-            response = {}
-            response["code"] = 200
-            response["data"] = 0
-            response["msg"] = "账号或者密码错误！"
-            return json(response)
+            return get_json(code=200, data={"token": 0}, msg="账号或者密码错误!")
+
     else:
-        response = {}
-        response["code"] = 200
-        response["data"] = 0
-        response["msg"] = "账号或者密码不能为空。"
-        return json(response)
+        return get_json(code=200, data={"token": 0}, msg="账号或者密码不能为空!")
 
 
 @bp.route('/adminLogout/')
@@ -111,8 +101,5 @@ def logout():
     # 同时从客户端浏览器中删除 session的 name属性
     session.pop('token', None)
     session.pop('admin', None)
-    response = {}
-    response["code"] = 200
-    response["data"] = 1
-    response["msg"] = "退出登陆"
-    return json(response)
+
+    return get_json(code=200, data={"token": 1}, msg="退出登陆!")

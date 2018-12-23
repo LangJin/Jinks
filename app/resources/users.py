@@ -60,7 +60,7 @@ def _user_permission_required(func):
             except:
                 print(traceback.print_exc())
                 return json(get_json(code=500, msg="内部错误,请检查参数是否正确!"))
-        return json(get_json(code=-300, msg="权限错误,请先登录!"))
+        return get_json(code=-300, msg="权限错误,请先登录!")
 
     return wrapper
 
@@ -93,7 +93,7 @@ def _parameters_filter(paras):
 
 @bp.route("/", methods=["GET"])
 def index():
-    return json(get_json(code="200", msg="111"))
+    return get_json()
 
 
 @bp.route("/userLogin", methods=["POST"])
@@ -137,7 +137,7 @@ def user_login():
             else:
                 return json(get_json(msg="登录失败, 您已经禁止登陆网站, 请联系管理员处理!"))
 
-    return json(get_json(code="-100", msg="登录失败，用户名或密码不正确!", ))
+    return get_json(code="-100", msg="登录失败，用户名或密码不正确!")
 
 
 @bp.route("/userRegist", methods=["POST"])
@@ -168,7 +168,7 @@ def user_regist():
     if excute(user_reg_sql):
         return json(get_json(msg="注册成功!"))
 
-    return json(get_json(code=-100, msg="注册失败，用户名可能已经存在了!"))
+    return get_json(code=-100, msg="注册失败，用户名可能已经存在了!")
 
 
 @bp.route("/userLogout/", methods=["post"])
@@ -181,4 +181,4 @@ def user_logout():
     """
     session.pop("user", None)
     session.pop("user_token", None)
-    return json(get_json())
+    return get_json()
