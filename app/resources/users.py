@@ -134,11 +134,11 @@ def user_login():
         return json(get_json(code=-200, msg="参数存在空值，请检查参数!"))
 
     # 如果没有获取验证码接口，则指定默认的9527为默认验证码，方便接口测试
-    session_captcha = session.get("captcha")
+    user_captcha = session.get("captcha")
     if captcha is None or captcha == "":
-        session_captcha = "9527"
+        user_captcha = "9527"
 
-    if session_captcha == captcha:
+    if user_captcha == captcha:
         query_login_sql = "select * from tbl_user where username='%s' and password='%s'" % (username, password)
         result = query(query_login_sql)
         if result:
