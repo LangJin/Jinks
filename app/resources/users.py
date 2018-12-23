@@ -1,14 +1,18 @@
 # -*- conding:utf-8 -*-
 __author__ = 'snake'
 
+
+import os, config, traceback
+
 from app import bp
+from io import StringIO, BytesIO
 from functools import wraps
 from app.utils.json import get_json
-from flask import jsonify as json, request, session, render_template
+from flask import jsonify as json, request, session, render_template, make_response
 from app.utils.database import query, excute
 from app.utils.date import get_current_time
+from app.utils.captcha import captcha_picture
 from app.utils.token import create_token
-import os, config, traceback
 
 
 def _is_logined():
@@ -91,6 +95,23 @@ def _parameters_filter(paras):
     return True
 
 
+@bp.route('/resgistCaptcha')
+def get_captcha():
+    # 把strs发给前端,或者在后台使用session保存
+    code_img, strs = captcha_picture()
+    buf = BytesIO()
+    code_img.save(buf, 'JPEG', quality=70)
+
+    buf_str = buf.getvalue()
+    response = make_response(buf_str)
+    response.headers['Content-Type'] = 'image/jpeg'
+
+    #  把验证码保存在session中，进行判断
+    session["captcha"] = strs
+
+    return response
+
+
 @bp.route("/", methods=["GET"])
 def index():
     return get_json()
@@ -111,9 +132,13 @@ def user_login():
     # 参数校验
     if not _parameters_filter([username, password, captcha]):
         return json(get_json(code=-200, msg="参数存在空值，请检查参数!"))
-    # todo
-    # 修改验证码
-    if captcha == "123456":
+
+    # 如果没有获取验证码接口，则指定默认的9527为默认验证码，方便接口测试
+    session_captcha = session.get("captcha")
+    if captcha is None or captcha == "":
+        session_captcha = "9527"
+
+    if session_captcha == captcha:
         query_login_sql = "select * from tbl_user where username='%s' and password='%s'" % (username, password)
         result = query(query_login_sql)
         if result:
