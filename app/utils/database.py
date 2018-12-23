@@ -1,9 +1,9 @@
 # -*- coding:utf-8 -*-
 __author__ = 'snake'
 
+import datetime
 import pymysql.cursors
-import config as cf
-from app.utils.date import decode_result_date
+from config import DBConfig
 
 
 def query(sql=""):
@@ -13,7 +13,7 @@ def query(sql=""):
         return: results 返回结果[{'articleId': 2, 'status': 1, 'createDate': '2018-03-30 11:22:50', 'userId': -1, 'id': 4, 'updateDate': None}]
     """
     results = []
-    db = pymysql.connect(**cf.db_config)
+    db = pymysql.connect(**DBConfig)
     cur = db.cursor()
     try:
         cur.execute(sql)  # 执行sql语句
@@ -24,7 +24,7 @@ def query(sql=""):
 
         # 构造键值对{"列名":数据}
         results = []
-        for res in decode_result_date(cur.fetchall()):
+        for res in _decode_result_date(cur.fetchall()):
             row = {}
             for i in range(len(descs)):
                 row[descs[i]] = res[i]
@@ -44,7 +44,7 @@ def excute(sql=""):
         return: is_success，1:成功 0失败
     """
     is_success = True
-    db = pymysql.connect(**cf.db_config)
+    db = pymysql.connect(**DBConfig)
     cur = db.cursor()
     try:
         cur.execute(sql)
@@ -65,7 +65,7 @@ def excutemany(sqls=[]):
         return: is_success，1:成功 0失败
     """
     is_success = True
-    db = pymysql.connect(**cf.db_config)
+    db = pymysql.connect(**DBConfig)
     cur = db.cursor()
     try:
         for sql in sqls:
@@ -78,6 +78,25 @@ def excutemany(sqls=[]):
         cur.close()
         db.close()
         return is_success
+
+
+def _decode_result_date(datas):
+    """
+    将数据库查询的数据进行时间格式化
+    :param datas: (())， 从数据库查询的数据
+    :return: [[]] 返回list列表
+    """
+    results = []
+    for data in datas:
+        tmp_list = []
+        for item in data:
+            if isinstance(item, datetime):
+                tmp_list.append(item.strftime('%Y-%m-%d %H:%M:%S'))
+            else:
+                tmp_list.append(item)
+        results.append(tmp_list)
+
+    return results
 
 
 if __name__ == "__main__":

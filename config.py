@@ -1,42 +1,43 @@
 # -*- coding:utf-8 -*-
 __author__ = 'snake'
 
-import os
+import os, sys
 
 
-# 开发环境
-class DevelopConfig:
-    DEBUG = True
-    HOST = "0.0.0.0"
-    JSON_AS_ASCII = False #json 中文支持
-    BABEL_DEFAULT_LOCALE = 'zh'
-    SECRET_KEY = os.urandom(24)    # SESSION配置
+DevelopConfig = {
+    "DEBUG": True,
+    "HOST": "0.0.0.0",
+    "JSON_AS_ASCII": False,  # json 中文支持
+    "BABEL_DEFAULT_LOCALE": "zh",
+    "SECRET_KEY": os.urandom(24)  # SESSION配置
+}
 
+ProductionConfig = {
+    "DEBUG": False,
+    "HOST": "0.0.0.0",
+    "JSON_AS_ASCII": False,  # json 中文支持
+    "BABEL_DEFAULT_LOCALE": "zh",
+    "SECRET_KEY": os.urandom(24)  # SESSION配置
+}
 
-# 线上发布环境
-class ProductionConfig:
-    DEBUG = False
-    HOST = "0.0.0.0"
-    JSON_AS_ASCII = False #json 中文支持
-    BABEL_DEFAULT_LOCALE = 'zh'
-    SECRET_KEY = os.urandom(24)    # SESSION配置
-
-
-flask_config = {
+FlaskConfig = {
     "DevelopConfig": DevelopConfig,
     "ProductionConfig": ProductionConfig
-    }
+}
 
-
-db_config = {
-    'host': '127.0.0.1',
+DBConfig = {
+    'host': '118.24.29.59',
     'port': 3306,
     'user': 'root',
     'password': '123456',
-    'db': 'lux',
+    'db': 'jinks',
     'charset': 'utf8mb4'
 }
 
-upload_config = {
-    "UPLOAD_FOLDER":"C:\\Users\\SNake\\PycharmProjects\\Lux\\app\\static\\uploads"
+UploadConfig = {
+    "UPLOAD_FOLDER": sys.path[1] + "\\app\\static\\uploads"
 }
+
+
+if __name__ == "__main__":
+    print(UploadConfig["UPLOAD_FOLDER"])
