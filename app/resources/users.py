@@ -114,7 +114,7 @@ def get_captcha():
 
 @bp.route("/", methods=["GET"])
 def index():
-    return get_json()
+    return render_template("login.html")
 
 
 @bp.route("/userLogin", methods=["POST"])
