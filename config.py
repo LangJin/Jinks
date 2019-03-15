@@ -26,7 +26,7 @@ FlaskConfig = {
 }
 
 DBConfig = {
-    'host': '118.24.29.59',
+    'host': 'localhost',
     'port': 3306,
     'user': 'root',
     'password': '123456',

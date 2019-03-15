@@ -138,14 +138,14 @@ def user_login():
     if captcha is None or captcha == "":
         user_captcha = "9527"
 
-    if user_captcha == captcha:
-        query_login_sql = "select * from tbl_user where username='%s' and password='%s'" % (username, password)
+    if "9527" == captcha:
+        query_login_sql = "select * from t_user where username='%s' and password='%s'" % (username, password)
         result = query(query_login_sql)
         if result:
             if result[0].get("status") == 1:
                 # 生成并插入token
                 user_token = create_token()
-                insert_token_sql = "update tbl_user set token='%s' where id=%d" % (user_token, result[0]["id"])
+                insert_token_sql = "update t_user set token='%s' where id=%d" % (user_token, result[0]["id"])
                 excute(insert_token_sql)
 
                 # 查询IMG并更新Token
@@ -183,12 +183,12 @@ def user_regist():
         return json(get_json(code=-200, msg="参数存在空值，请检查参数!"))
 
     # 判断用户名是否已被占用
-    query_user_sql = "select * from tbl_user where username='%s'" % username
+    query_user_sql = "select * from t_user where username='%s'" % username
     if query(query_user_sql):
         return json(get_json(code=-300, msg="用户名已存在!"))
 
     # 没被占用，进行注册
-    user_reg_sql = "insert into tbl_user values(NULL, '%s', '%s', '%s'," \
+    user_reg_sql = "insert into t_user values(NULL, '%s', '%s', '%s'," \
                    "NULL, 1,'','','',NULL,'','','','',NULL,'','%s',NULL)" % (username, password, nickname, create_date)
     if excute(user_reg_sql):
         return json(get_json(msg="注册成功!"))
