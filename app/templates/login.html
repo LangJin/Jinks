@@ -59,6 +59,7 @@ function login(){
             data: datas,                    // 把json格式的参数传给后端
             success: function (str) {       // 如果返回值正常，后端接口没有报错，则执行这个方法
                 alert(str.msg);             // 打印返回值的msg消息，直接引用str.code 就能查看返回值的code
+                window.location.href = "/index";
             },
             fail: function (err, status) {  // 如果接口报错了，则执行失败的方法
                 console.log(err);

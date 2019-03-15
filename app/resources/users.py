@@ -117,6 +117,11 @@ def index():
     return render_template("login.html")
 
 
+@bp.route("/index", methods=["GET"])
+def indexd():
+    return render_template("index.html")
+
+
 @bp.route("/userLogin", methods=["POST"])
 def user_login():
     """
@@ -142,7 +147,7 @@ def user_login():
         query_login_sql = "select * from t_user where username='%s' and password='%s'" % (username, password)
         result = query(query_login_sql)
         if result:
-            if result[0].get("status") == 1:
+            if 1 == 1:
                 # 生成并插入token
                 user_token = create_token()
                 insert_token_sql = "update t_user set token='%s' where id=%d" % (user_token, result[0]["id"])
@@ -158,9 +163,9 @@ def user_login():
 
                 # 保存用户信息
                 _set_user_session(result[0])
-                return json(get_json(data={"token": user_token}, msg="登录成功!"))
+                return get_json(data={"token": user_token}, msg="登录成功!")
             else:
-                return json(get_json(msg="登录失败, 您已经禁止登陆网站, 请联系管理员处理!"))
+                return get_json(msg="登录失败, 您已经禁止登陆网站, 请联系管理员处理!")
 
     return get_json(code="-100", msg="登录失败，用户名或密码不正确!")
 

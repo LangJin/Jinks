@@ -17,7 +17,6 @@ def query(sql=""):
     cur = db.cursor()
     try:
         cur.execute(sql)  # 执行sql语句
-        print(_decode_result_date(cur.fetchall()))
         # 获得列名
         descs = []
         for desc in cur.description:
@@ -91,7 +90,7 @@ def _decode_result_date(datas):
     for data in datas:
         tmp_list = []
         for item in data:
-            if isinstance(item, datetime):
+            if isinstance(item, datetime.datetime):
                 tmp_list.append(item.strftime('%Y-%m-%d %H:%M:%S'))
             else:
                 tmp_list.append(item)
